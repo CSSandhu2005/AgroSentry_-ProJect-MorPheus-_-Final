@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import the map to ensure client-only canvas rendering
-const DroneMap = dynamic(() => import("./DroneMap"), { ssr: false });
+const LiveDroneMap = dynamic(() => import("./LiveDroneMap"), { ssr: false });
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 interface Waypoint {
@@ -49,8 +49,7 @@ const GlassCard = ({
   glow?: boolean;
 }) => (
   <div
-    className={`relative rounded-2xl border border-green-500/20 bg-black/60 backdrop-blur-md p-5 ${glow ? "shadow-[0_0_24px_2px_rgba(34,197,94,0.18)]" : ""
-      } ${className}`}
+    className={`relative rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-sm transition-all duration-200 ${className}`}
   >
     {children}
   </div>
@@ -58,8 +57,8 @@ const GlassCard = ({
 
 // ─── Section heading ──────────────────────────────────────────────────────
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-green-400 mb-1 flex items-center gap-2">
-    <span className="inline-block w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_2px_rgba(34,197,94,0.8)]" />
+  <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400 mb-1 flex items-center gap-2">
+    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
     {children}
   </h2>
 );
@@ -68,22 +67,22 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 const NeonButton = ({
   children,
   onClick,
-  variant = "green",
+  variant = "emerald",
   className = "",
 }: {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: "green" | "red" | "ghost";
+  variant?: "emerald" | "red" | "ghost";
   className?: string;
 }) => {
   const base =
     "relative px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer select-none";
   const variants = {
-    green:
-      "bg-green-500/10 text-green-300 border border-green-500/40 hover:bg-green-500/25 hover:shadow-[0_0_16px_2px_rgba(34,197,94,0.5)] hover:border-green-400",
-    red: "bg-red-500/10 text-red-300 border border-red-500/40 hover:bg-red-500/30 hover:shadow-[0_0_20px_4px_rgba(239,68,68,0.6)] hover:border-red-400",
+    emerald:
+      "bg-emerald-600 text-white hover:bg-emerald-500 shadow-none",
+    red: "bg-red-600 text-white hover:bg-red-500 shadow-none",
     ghost:
-      "bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10 hover:border-white/20",
+      "bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:text-white",
   };
   return (
     <button className={`${base} ${variants[variant]} ${className}`} onClick={onClick}>
@@ -115,7 +114,7 @@ const MissionPlanner = ({
     <GlassCard glow className="flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between">
         <SectionTitle>Mission Planner</SectionTitle>
-        <span className="text-[10px] text-green-400/60 font-mono">PLAN-{waypoints.length} WP</span>
+        <span className="text-[10px] text-slate-500 font-mono">PLAN-{waypoints.length} WP</span>
       </div>
 
       {/* Waypoint list */}
@@ -123,17 +122,17 @@ const MissionPlanner = ({
         {waypoints.map((wp, i) => (
           <div
             key={wp.id}
-            className="flex items-center gap-3 bg-green-500/5 border border-green-500/15 rounded-xl px-3 py-2"
+            className="flex items-center gap-3 bg-slate-800/50 border border-slate-800 rounded-xl px-3 py-2"
           >
-            <span className="w-6 h-6 flex items-center justify-center rounded-full bg-green-500/20 text-green-400 text-xs font-bold shrink-0">
+            <span className="w-6 h-6 flex items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0">
               {wp.label}
             </span>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-300 font-mono truncate">
+              <p className="text-xs text-slate-400 font-mono truncate">
                 {wp.lat.toFixed(4)}, {wp.lng.toFixed(4)}
               </p>
             </div>
-            <span className="text-[10px] text-green-400/50 font-mono">WP-{i + 1}</span>
+            <span className="text-[10px] text-slate-500 font-mono">WP-{i + 1}</span>
           </div>
         ))}
       </div>
@@ -144,9 +143,9 @@ const MissionPlanner = ({
 
       {/* Altitude slider */}
       <div>
-        <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+        <div className="flex justify-between text-xs text-slate-500 mb-1.5">
           <span>Mission Altitude</span>
-          <span className="text-green-400 font-mono">{altitude} m</span>
+          <span className="text-emerald-500 font-mono">{altitude} m</span>
         </div>
         <input
           type="range"
@@ -154,16 +153,16 @@ const MissionPlanner = ({
           max={200}
           value={altitude}
           onChange={(e) => setAltitude(Number(e.target.value))}
-          className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-green-500 bg-green-500/20"
+          className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-emerald-500 bg-slate-800"
         />
       </div>
 
       {/* Spray toggle */}
-      <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5">
-        <span className="text-sm text-gray-300 font-medium">Spray System</span>
+      <div className="flex items-center justify-between bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-2.5">
+        <span className="text-sm text-slate-300 font-medium">Spray System</span>
         <button
           onClick={() => setSpray(!spray)}
-          className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${spray ? "bg-green-500" : "bg-white/20"
+          className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${spray ? "bg-emerald-600" : "bg-slate-700"
             }`}
         >
           <span
@@ -179,8 +178,8 @@ const MissionPlanner = ({
           {saved ? "✓ Mission Saved" : "Save Mission"}
         </NeonButton>
         <NeonButton
-          variant="green"
-          className="w-full text-center shadow-[0_0_20px_2px_rgba(34,197,94,0.3)]"
+          variant="emerald"
+          className="w-full text-center"
         >
           Send Mission to Drone 🚀
         </NeonButton>
@@ -223,18 +222,18 @@ const TelemetryPanel = () => {
     mode === "RTL"
       ? "text-red-400 border-red-500/40 bg-red-500/10"
       : mode === "MANUAL"
-        ? "text-yellow-400 border-yellow-500/40 bg-yellow-500/10"
-        : "text-green-400 border-green-500/40 bg-green-500/10";
+        ? "text-amber-400 border-amber-500/40 bg-amber-500/10"
+        : "text-emerald-400 border-emerald-500/40 bg-emerald-500/10";
 
   const battColor =
-    battery > 50 ? "bg-green-500" : battery > 20 ? "bg-yellow-500" : "bg-red-500";
+    battery > 50 ? "bg-emerald-500" : battery > 20 ? "bg-amber-500" : "bg-red-500";
 
   const SignalBars = ({ strength }: { strength: number }) => (
     <div className="flex items-end gap-0.5 h-5">
       {[1, 2, 3, 4, 5].map((bar) => (
         <div
           key={bar}
-          className={`w-2 rounded-sm transition-all duration-500 ${bar <= strength ? "bg-green-400" : "bg-green-400/15"
+          className={`w-2 rounded-sm transition-all duration-500 ${bar <= strength ? "bg-emerald-500" : "bg-slate-800"
             }`}
           style={{ height: `${bar * 4}px` }}
         />
@@ -252,16 +251,16 @@ const TelemetryPanel = () => {
       </div>
 
       {/* Battery */}
-      <div className="bg-white/5 rounded-xl p-3">
+      <div className="bg-slate-800/50 border border-slate-800 rounded-xl p-3">
         <div className="flex justify-between text-xs mb-2">
-          <span className="text-gray-400">Battery</span>
-          <span className={`font-mono font-bold ${battery < 20 ? "text-red-400" : "text-green-400"}`}>
+          <span className="text-slate-500">Battery</span>
+          <span className={`font-mono font-bold ${battery < 20 ? "text-red-400" : "text-emerald-500"}`}>
             {battery.toFixed(1)}%
           </span>
         </div>
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-700 ${battColor} shadow-[0_0_8px_2px_rgba(34,197,94,0.4)]`}
+            className={`h-full rounded-full transition-all duration-700 ${battColor}`}
             style={{ width: `${battery}%` }}
           />
         </div>
@@ -274,18 +273,18 @@ const TelemetryPanel = () => {
           { label: "Speed", value: `${speed.toFixed(1)}`, unit: "m/s" },
           { label: "Wind Speed", value: `${wind.toFixed(1)}`, unit: "km/h" },
         ].map(({ label, value, unit }) => (
-          <div key={label} className="bg-white/5 border border-green-500/10 rounded-xl p-3">
-            <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">{label}</p>
-            <p className="text-lg font-bold text-green-400 font-mono leading-none">
+          <div key={label} className="bg-slate-800/50 border border-slate-800 rounded-xl p-3">
+            <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{label}</p>
+            <p className="text-lg font-bold text-emerald-500 font-mono leading-none">
               {value}
-              <span className="text-xs text-gray-500 ml-1 font-normal">{unit}</span>
+              <span className="text-xs text-slate-500 ml-1 font-normal">{unit}</span>
             </p>
           </div>
         ))}
 
         {/* Signal */}
-        <div className="bg-white/5 border border-green-500/10 rounded-xl p-3">
-          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Signal</p>
+        <div className="bg-slate-800/50 border border-slate-800 rounded-xl p-3">
+          <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Signal</p>
           <SignalBars strength={signal} />
         </div>
       </div>
@@ -293,10 +292,10 @@ const TelemetryPanel = () => {
       {/* Animated pulse indicator */}
       <div className="flex items-center gap-2 mt-auto">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
         </span>
-        <span className="text-[11px] text-green-400/60 font-mono">LIVE · upd every 2s</span>
+        <span className="text-[11px] text-slate-500 font-mono">LIVE · upd every 2s</span>
       </div>
     </GlassCard>
   );
@@ -317,19 +316,19 @@ const DroneControls = () => {
     <GlassCard className="flex flex-col gap-4">
       <SectionTitle>Drone Controls</SectionTitle>
       {activeCmd && (
-        <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-3 py-2 text-green-400 text-xs font-mono animate-pulse">
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-3 py-2 text-emerald-400 text-xs font-mono">
           ▶ Executing: {activeCmd}
         </div>
       )}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {["Take Off", "Land", "Pause Mission", "Resume Mission", "Return Home"].map((cmd) => (
-          <NeonButton key={cmd} variant="green" onClick={() => sendCmd(cmd)}>
+          <NeonButton key={cmd} variant="emerald" onClick={() => sendCmd(cmd)}>
             {cmd}
           </NeonButton>
         ))}
         <NeonButton
           variant="red"
-          className="col-span-2 sm:col-span-1 shadow-[0_0_24px_4px_rgba(239,68,68,0.35)] animate-pulse"
+          className="col-span-2 sm:col-span-1"
           onClick={() => sendCmd("EMERGENCY STOP")}
         >
           ⚠ Emergency Stop
@@ -345,22 +344,22 @@ const DroneControls = () => {
 const CameraFeed = () => (
   <GlassCard className="flex flex-col gap-3">
     <SectionTitle>Live Camera Feed</SectionTitle>
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-green-500/20">
+    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800">
       {/* Animated scan lines */}
       <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="w-full h-px bg-green-400/5" />
+          <div key={i} className="w-full h-px bg-white/5" />
         ))}
       </div>
       {/* Moving scan line */}
       <div
-        className="absolute w-full h-0.5 bg-green-400/30 animate-bounce"
+        className="absolute w-full h-0.5 bg-white/10 animate-pulse"
         style={{ animationDuration: "3s" }}
       />
       {/* HUD elements */}
       <div className="absolute inset-0 p-3 flex flex-col justify-between">
         <div className="flex justify-between">
-          <span className="text-green-400 text-[10px] font-mono bg-black/60 px-2 py-0.5 rounded">
+          <span className="text-white text-[10px] font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">
             CAM-1 · NADIR
           </span>
           <span className="flex items-center gap-1 text-red-400 text-[10px] font-mono bg-black/60 px-2 py-0.5 rounded">
@@ -371,16 +370,16 @@ const CameraFeed = () => (
         {/* Cross-hair */}
         <div className="flex items-center justify-center flex-1">
           <div className="relative w-10 h-10">
-            <div className="absolute inset-0 border border-green-400/40 rounded-full" />
-            <div className="absolute top-1/2 left-0 w-full h-px bg-green-400/40" />
-            <div className="absolute left-1/2 top-0 h-full w-px bg-green-400/40" />
+            <div className="absolute inset-0 border border-white/20 rounded-full" />
+            <div className="absolute top-1/2 left-0 w-full h-px bg-white/20" />
+            <div className="absolute left-1/2 top-0 h-full w-px bg-white/20" />
           </div>
         </div>
         <div className="flex justify-between">
-          <span className="text-green-400/60 text-[10px] font-mono bg-black/60 px-2 py-0.5 rounded">
+          <span className="text-slate-400 text-[10px] font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">
             ALT 34m
           </span>
-          <span className="text-green-400/60 text-[10px] font-mono bg-black/60 px-2 py-0.5 rounded">
+          <span className="text-slate-400 text-[10px] font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">
             FOV 84°
           </span>
         </div>
@@ -396,14 +395,14 @@ const CameraFeed = () => (
 const FlightAlerts = () => {
   const alertStyle: Record<Alert["level"], string> = {
     critical:
-      "border-red-500/40 bg-red-500/8 shadow-[0_0_12px_1px_rgba(239,68,68,0.2)]",
-    warning: "border-orange-500/40 bg-orange-500/8 shadow-[0_0_12px_1px_rgba(249,115,22,0.2)]",
-    info: "border-green-500/30 bg-green-500/8",
+      "border-red-500/20 bg-red-500/5",
+    warning: "border-amber-500/20 bg-amber-500/5",
+    info: "border-emerald-500/20 bg-emerald-500/5",
   };
   const alertTextStyle: Record<Alert["level"], string> = {
     critical: "text-red-400",
-    warning: "text-orange-400",
-    info: "text-green-400",
+    warning: "text-amber-400",
+    info: "text-emerald-400",
   };
   const alertIcon: Record<Alert["level"], string> = {
     critical: "🚨",
@@ -430,7 +429,7 @@ const FlightAlerts = () => {
               <p className={`text-xs font-medium ${alertTextStyle[alert.level]}`}>
                 {alert.message}
               </p>
-              <p className="text-[10px] text-gray-600 mt-0.5">{alert.time}</p>
+              <p className="text-[10px] text-slate-600 mt-0.5">{alert.time}</p>
             </div>
           </div>
         ))}
@@ -480,38 +479,38 @@ const AIMissionAssistant = () => {
       <div className="flex flex-col md:flex-row md:items-start gap-6">
         <div className="flex-1">
           <SectionTitle>AI Mission Suggestions</SectionTitle>
-          <p className="text-[11px] text-green-400/50 font-mono mb-3">
+          <p className="text-[11px] text-slate-500 font-mono mb-3">
             Powered by AgroSentry AI Engine
           </p>
-          <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-4">
+          <div className="bg-slate-800/50 border border-slate-800 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-green-400 text-base">🤖</span>
-              <span className="text-xs text-green-400 font-semibold">{current.field} Alert</span>
+              <span className="text-emerald-500 text-base">🤖</span>
+              <span className="text-xs text-emerald-400 font-semibold">{current.field} Alert</span>
             </div>
-            <p className="text-sm text-gray-300 leading-relaxed">{current.suggestion}</p>
+            <p className="text-sm text-slate-300 leading-relaxed">{current.suggestion}</p>
           </div>
         </div>
 
         <div className="flex flex-col gap-3 md:min-w-[220px]">
           <div className="grid grid-cols-2 gap-2 text-center">
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-xl font-bold text-green-400 font-mono">3</p>
-              <p className="text-[10px] text-gray-500 mt-1">Active Alerts</p>
+            <div className="bg-slate-800/50 border border-slate-800 rounded-xl p-3">
+              <p className="text-xl font-bold text-emerald-500 font-mono">3</p>
+              <p className="text-[10px] text-slate-500 mt-1">Active Alerts</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-xl font-bold text-yellow-400 font-mono">7</p>
-              <p className="text-[10px] text-gray-500 mt-1">Fields Monitored</p>
+            <div className="bg-slate-800/50 border border-slate-800 rounded-xl p-3">
+              <p className="text-xl font-bold text-amber-500 font-mono">7</p>
+              <p className="text-[10px] text-slate-500 mt-1">Fields Monitored</p>
             </div>
           </div>
 
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="relative w-full px-4 py-3 rounded-xl font-semibold text-sm bg-green-500/15 text-green-300 border border-green-500/50 hover:bg-green-500/30 hover:shadow-[0_0_24px_4px_rgba(34,197,94,0.5)] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="relative w-full px-4 py-3 rounded-xl font-semibold text-sm bg-emerald-600 text-white hover:bg-emerald-500 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {generating ? (
               <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-4 w-4 text-green-400" viewBox="0 0 24 24" fill="none">
+                <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                 </svg>
@@ -531,7 +530,21 @@ const AIMissionAssistant = () => {
 // MAIN COMPONENT
 // ────────────────────────────────────────────────────────────────────────────
 export function FlightControlDashboard() {
-  const [waypoints, setWaypoints] = useState<Waypoint[]>(INITIAL_WAYPOINTS);
+  const [waypoints, setWaypoints] = useState<Waypoint[]>([]);
+
+  useEffect(() => {
+  const fetchWaypoints = async () => {
+    try {
+      const res = await fetch("/api/flight-control/missions/1/waypoints");
+      const data = await res.json();
+      setWaypoints(data);
+    } catch (err) {
+      console.error("Failed to fetch waypoints", err);
+    }
+  };
+
+  fetchWaypoints();
+}, []);
 
   const addWaypoint = () => {
     const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -549,28 +562,28 @@ export function FlightControlDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 py-6 md:px-8 overflow-y-auto">
+    <div className="min-h-screen bg-slate-950 text-slate-200 px-4 py-6 md:px-8 overflow-y-auto">
       {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-            
+
             <span>
               Flight{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300">
+              <span className="text-emerald-500">
                 Control
               </span>
             </span>
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Drone Mission Control Center · AgroSentry</p>
+          <p className="text-slate-500 text-sm mt-1">Drone Mission Control Center · AgroSentry</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-2">
+          <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span className="text-green-400 text-xs font-semibold">DRONE ONLINE</span>
+            <span className="text-emerald-500 text-xs font-semibold">DRONE ONLINE</span>
           </div>
         </div>
       </div>
@@ -584,28 +597,29 @@ export function FlightControlDashboard() {
 
         {/* Live Drone Map */}
         <div className="lg:col-span-1">
-          <GlassCard glow className="h-full min-h-[480px] flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <SectionTitle>Live Drone Map</SectionTitle>
-              <div className="flex gap-2">
-                <button className="text-[10px] border border-green-500/30 text-green-400/70 rounded-lg px-2 py-1 hover:bg-green-500/10 transition-colors">
-                  Satellite
-                </button>
-                <button className="text-[10px] border border-white/10 text-gray-500 rounded-lg px-2 py-1 hover:bg-white/5 transition-colors">
-                  Terrain
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 rounded-xl overflow-hidden border border-green-500/20 relative min-h-[380px]">
-              <DroneMap waypoints={waypoints} />
-              {/* Return Home overlay */}
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000]">
-                <button className="bg-black/80 backdrop-blur border border-green-500/50 text-green-400 text-xs font-semibold px-4 py-2 rounded-xl hover:bg-green-500/20 hover:shadow-[0_0_16px_2px_rgba(34,197,94,0.4)] transition-all">
-                  🏠 Return Home
-                </button>
-              </div>
-            </div>
-          </GlassCard>
+          <LiveDroneMap waypoints={waypoints}
+  onAddWaypoint={async (lat: number, lng: number) => {
+    const nextLabel =
+      String.fromCharCode(65 + waypoints.length % 26);
+
+    const newWaypoint = {
+      id: `wp-${Date.now()}`,
+      label: nextLabel,
+      lat,
+      lng,
+    };
+
+    // 1️⃣ Update frontend instantly
+    setWaypoints((prev) => [...prev, newWaypoint]);
+
+    // 2️⃣ Send to backend
+    await fetch("/api/flight-control/missions/1/waypoints", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newWaypoint),
+    });
+  }}
+/>
         </div>
 
         {/* Telemetry */}

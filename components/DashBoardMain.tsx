@@ -178,11 +178,18 @@ const Dashboard = ({ activeView }: { activeView: string }) => {
 
   useEffect(() => {
     fetch("/api/community")
-      .then((res) => res.json())
       .then((res) => {
-        setData(res.analysis);
-        setSummary(res.aiSummary);
-        setRegionScore(res.regionScore);
+        if (!res.ok) throw new Error("Failed to fetch community insights");
+        return res.json();
+      })
+      .then((res) => {
+        setData(res.analysis || []);
+        setSummary(res.aiSummary || "No insights available at this time.");
+        setRegionScore(res.regionScore || 0);
+      })
+      .catch((err) => {
+        console.error("Community Fetch Error:", err);
+        setSummary("The Community Intelligence Agent is currently unavailable. Please check your connection or try again later.");
       });
   }, []);
 
