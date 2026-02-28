@@ -142,3 +142,15 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes gridMove {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(40px);
+  }
+}
+
+.animate-grid {
+  animation: gridMove 8s linear infinite;
+}
