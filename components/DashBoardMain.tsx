@@ -1,7 +1,11 @@
 "use client";
+<<<<<<< HEAD
 
 import React, { useEffect, useState } from "react";
 
+=======
+import { useEffect, useState } from "react";
+>>>>>>> e26c63b342ff52bbd68db727f4a7578c2051c98a
 import {
   BarChart,
   Bar,
@@ -10,9 +14,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+<<<<<<< HEAD
 
 import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
 
+=======
+import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
+>>>>>>> e26c63b342ff52bbd68db727f4a7578c2051c98a
 import {
   IconArrowLeft,
   IconBrandTabler,
@@ -20,6 +28,7 @@ import {
   IconUserBolt,
   IconDrone,
   IconCpu,
+<<<<<<< HEAD
   IconCloud,
   IconEye,
 } from "@tabler/icons-react";
@@ -33,6 +42,18 @@ import { ComputerVisionDashboard } from "@/components/ComputerVisionDashboard";
 import { SprayIntelligenceDashboard } from "@/components/spray/SprayIntelligenceDashboard";
 import { CommandCenter } from "./command/CommandCenter";
 import WeatherAgent from "@/components/WeatherAgent";
+=======
+} from "@tabler/icons-react";
+import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { FlightControlDashboard } from "./FlightControlDashboard";
+import { IconEye } from "@tabler/icons-react";
+import { ComputerVisionDashboard } from "@/components/ComputerVisionDashboard";
+import { SprayIntelligenceDashboard } from "@/components/spray/SprayIntelligenceDashboard";
+import { CommandCenter } from "./command/CommandCenter";
+
+>>>>>>> e26c63b342ff52bbd68db727f4a7578c2051c98a
 export function DashBoardMain({ initialView }: { initialView?: string }) {
   const { user, isLoaded } = useUser();
   const links = [
@@ -71,12 +92,15 @@ export function DashBoardMain({ initialView }: { initialView?: string }) {
         <IconEye className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
+<<<<<<< HEAD
       {
       label: "Weather Agent",
       onClick: () => setActiveView("weather"),
       icon: <IconCloud className="h-5 w-5 shrink-0 text-blue-500" />,
     },
 
+=======
+>>>>>>> e26c63b342ff52bbd68db727f4a7578c2051c98a
     {
       label: "Spray Intelligence",
       onClick: () => setActiveView("spray-intelligence"),
@@ -308,11 +332,15 @@ const Dashboard = ({ activeView }: { activeView: string }) => {
             <ComputerVisionDashboard />
           </div>
         )}
+<<<<<<< HEAD
 {activeView === "weather" && (
   <div className="-m-6 md:-m-10 flex-1 h-full">
     <WeatherAgent />
   </div>
 )}
+=======
+
+>>>>>>> e26c63b342ff52bbd68db727f4a7578c2051c98a
         {activeView === "spray-intelligence" && (
           <div className="-m-6 md:-m-10 flex-1 h-full">
             <SprayIntelligenceDashboard />
